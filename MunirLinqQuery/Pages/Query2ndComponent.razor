@@ -1,0 +1,36 @@
+﻿@page "/Q1"
+@using MunirLinqQuery.Data
+@inject StudentDbContext _db
+
+
+<h3>Second Query Solution</h3>
+
+<table>
+    <tbody>
+        @foreach (var item in students)
+        {
+        <td>@item.sid</td>
+        <td>@item.major</td>
+        }
+    </tbody>
+</table>
+
+@code {
+    List<Student> students = new List<Student>();
+
+    protected override void OnInitialized()
+    {
+        LoadQuery();
+    }
+
+    void LoadQuery()
+    {
+        students = (from s in _db.std
+                    where s.enrolls.All(c => c.classes.Count != 0)
+                    select new Student
+                        {
+                            sid = s.sid,
+                            major = s.major
+                        }).ToList();
+    }
+}

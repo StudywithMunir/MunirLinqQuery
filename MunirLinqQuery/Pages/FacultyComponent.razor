@@ -1,0 +1,165 @@
+﻿@page "/addfaculty"
+@using MunirLinqQuery.Data
+@inject StudentDbContext _db
+
+<style>
+
+    h3 {
+        color: #333;
+        font-family: 'Arial', sans-serif;
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        color: #555;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 16px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    button {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    tr:hover {
+        background-color: #f5f5f5;
+    }
+</style>
+
+<h3>Faculty Form</h3>
+
+<EditForm Model="@faculty" OnValidSubmit="@HandleSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <label for="name">Name:</label>
+    <InputText id="name" @bind-Value="faculty.fname" class="form-control" />
+    <br />
+    <label for="depid">DepId:</label>
+    <InputNumber id="depid" @bind-Value="faculty.depid" class="form-control" />
+    <br />
+    <label for="standing">Standing:</label>
+    <InputText id="standing" @bind-Value="faculty.standing" class="form-control" />
+    <br />
+    <label for="course">Course:</label>
+    <InputSelect @bind-Value="faculty.enroll" class="form-control">
+        <option value="">Choose an option</option>
+        @foreach (var item in _db.Enrolled.ToList())
+        {
+            <option value="@item.eid">@item.eid</option>
+        }
+    </InputSelect>
+    <br />
+    <label for="class">Select Class:</label>
+    <InputSelect @bind-Value="faculty.classes" class="form-control">
+        <option value="">Choose an option</option>
+        @foreach (var item in _db.Classes.ToList())
+        {
+            <option value="@item.cid">@item.name</option>
+        }
+    </InputSelect>
+    <br />
+    <button type="submit">Save</button>
+</EditForm>
+
+<table>
+    <thead>
+        <tr>
+            <th>Faculty Name</th>
+            <th>Department ID</th>
+            <th>Standing</th>
+            <th>Enroll</th>
+            <th>Classes</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var currentStudent in Faculties)
+        {
+            <tr>
+                <td>@currentStudent.fname</td>
+                <td>@currentStudent.depid</td>
+                <td>@currentStudent.standing</td>
+                <td>@currentStudent.enroll</td>
+                <td>@currentStudent.classes</td>
+                <td><button @onclick="() => EditFaculty(currentStudent)">Edit</button></td>
+                <td><button @onclick="() => DeleteFaculty(currentStudent)">Delete</button></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    Faculty faculty = new Faculty();
+    List<Faculty> Faculties = new List<Faculty>();
+
+    protected override void OnInitialized()
+    {
+        LoadFaculties();
+    }
+
+    void LoadFaculties()
+    {
+        Faculties = _db.Faculties.ToList();
+    }
+
+    void HandleSubmit()
+    {
+        if (faculty.fid == 0)
+        {
+            _db.Add(faculty);
+        }
+        else
+        {
+            _db.Update(faculty);
+        }
+
+        _db.SaveChanges();
+        faculty = new Faculty(); 
+        LoadFaculties(); 
+    }
+
+    void EditFaculty(Faculty currentFaculty)
+    {
+        faculty = currentFaculty;
+    }
+
+    void DeleteFaculty(Faculty currentFaculty)
+    {
+        _db.Remove(currentFaculty);
+        _db.SaveChanges();
+        LoadFaculties(); 
+    }
+}

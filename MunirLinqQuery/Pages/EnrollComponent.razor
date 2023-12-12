@@ -1,0 +1,149 @@
+﻿@page "/enrollment"
+@using MunirLinqQuery.Data
+@inject StudentDbContext _db
+
+<style>
+
+    h3 {
+        color: #333;
+        font-family: 'Arial', sans-serif;
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        color: #555;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 16px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    button {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    tr:hover {
+        background-color: #f5f5f5;
+    }
+</style>
+
+<h3>Student Form</h3>
+
+<EditForm Model="@enroll" OnValidSubmit="@HandleSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <label for="student">Student:</label>
+    <InputSelect @bind-Value="enroll.students" class="form-control">
+        <option value="">Choose an option</option>
+        @foreach (var item in _db.std.ToList())
+        {
+            <option value="@item.sid">@item.sname</option>
+        }
+    </InputSelect>
+    <br />
+    <label for="class">Class:</label>
+    <InputSelect @bind-Value="enroll.classes" class="form-control">
+        <option value="">Choose an option</option>
+        @foreach (var item in _db.Classes.ToList())
+        {
+            <option value="@item.cid">@item.name</option>
+        }
+    </InputSelect>
+    <br />
+    <button type="submit">Save</button>
+</EditForm>
+<table>
+    <thead>
+        <tr>
+            <th>Students</th>
+            <th>Classes</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var currentStudent in enrolls)
+        {
+            <tr>
+                <td>@currentStudent.students</td>
+                <td>@currentStudent.classes</td>
+                <td><button @onclick="() => EditEnroll(currentStudent)">Edit</button></td>
+                <td><button @onclick="() => DeleteEnroll(currentStudent)">Delete</button></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    Enrolled enroll = new Enrolled();
+    List<Enrolled> enrolls = new List<Enrolled>();
+
+    protected override void OnInitialized()
+    {
+        LoadEnroll();
+    }
+
+    void LoadEnroll()
+    {
+        enrolls = _db.Enrolled.ToList();
+    }
+
+    void HandleSubmit()
+    {
+        if (enroll.eid == 0)
+        {
+            _db.Add(enroll);
+        }
+        else
+        {
+            _db.Update(enroll);
+        }
+
+        _db.SaveChanges();
+        enroll = new Enrolled(); 
+        LoadEnroll(); 
+    }
+
+    void EditEnroll(Enrolled currentEnroll)
+    {
+        enroll = currentEnroll;
+    }
+
+    void DeleteEnroll(Enrolled currentEnroll)
+    {
+        _db.Remove(currentEnroll);
+        _db.SaveChanges();
+        LoadEnroll(); 
+    }
+}

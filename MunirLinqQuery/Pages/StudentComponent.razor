@@ -1,0 +1,168 @@
+﻿@page "/addstudent"
+@using MunirLinqQuery.Data
+@inject StudentDbContext _db
+
+<style>
+   
+    h3 {
+        color: #333;
+        font-family: 'Arial', sans-serif;
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        color: #555;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 16px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    button {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    tr:hover {
+        background-color: #f5f5f5;
+    }
+</style>
+
+<h3>Student Form</h3>
+
+<EditForm Model="@student" OnValidSubmit="@HandleSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <label for="name">Name:</label>
+    <InputText id="name" @bind-Value="student.sname" class="form-control" />
+    <label for="age">Age:</label>
+    <InputNumber id="age" @bind-Value="student.age" class="form-control" />
+    <label for="major">Major:</label>
+    <InputText id="major" @bind-Value="student.major" class="form-control" />
+    <label for="age">Marks:</label>
+    <InputNumber id="age" @bind-Value="student.marks" class="form-control" />
+    <label for="standing">Standing:</label>
+    <InputText id="standing" @bind-Value="student.standing" class="form-control" />
+    <label for="fid">Select Teacher:</label>
+    <InputSelect @bind-Value="student.faculty" class="form-control">
+        <option value="">Choose an option</option>
+        @foreach (var item in _db.Faculties.ToList())
+        {
+            <option value="@item.fid">@item.fname</option>
+        }
+    </InputSelect>
+    <label for="course">Course:</label>
+    <InputSelect @bind-Value="student.enrolls" class="form-control">
+        <option value="">Choose an option</option>
+        @foreach (var item in _db.Enrolled.ToList())
+        {
+            <option value="@item.eid">@item.eid</option>
+        }
+    </InputSelect>
+    <button type="submit">Save</button>
+</EditForm>
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Major</th>
+            <th>Marks</th>
+            <th>Standing</th>
+            <th>Faculty</th>
+            <th>Enrolls</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var currentStudent in students)
+        {
+            <tr>
+                <td>@currentStudent.sname</td>
+                <td>@currentStudent.age</td>
+                <td>@currentStudent.major</td>
+                <td>@currentStudent.marks</td>
+                <td>@currentStudent.standing</td>
+                <td>@currentStudent.faculty</td>
+                <td>@currentStudent.enrolls</td>
+                <td><button @onclick="() => EditStudent(currentStudent)">Edit</button></td>
+                <td><button @onclick="() => DeleteStudent(currentStudent)">Delete</button></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    Student student = new Student();
+    List<Student> students = new List<Student>();
+
+    protected override void OnInitialized()
+    {
+        DisplayStudent();
+    }
+
+    void DisplayStudent()
+    {
+        students = _db.std.ToList();
+    }
+
+    void HandleSubmit()
+    {
+        if (student.sid == 0)
+        {
+            _db.Add(student);
+        }
+        else
+        {
+            _db.Update(student);
+        }
+
+        _db.SaveChanges();
+        student = new Student(); 
+        DisplayStudent();
+    }
+
+    void EditStudent(Student currentStudent)
+    {
+        student = currentStudent;
+    }
+
+    void DeleteStudent(Student currentStudent)
+    {
+        _db.Remove(currentStudent);
+        _db.SaveChanges();
+        DisplayStudent();
+    }
+}

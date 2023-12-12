@@ -1,0 +1,42 @@
+﻿@page "/Q1"
+@using MunirLinqQuery.Data
+@inject StudentDbContext _db
+
+
+<h3>Third Additional Query Solution</h3>
+
+<table>
+    <tbody>
+        @foreach (var item in students)
+        {
+        <td>@item.sname</td>
+        <td>@item.major</td>
+        <td>@item.age</td>
+
+        }
+    </tbody>
+</table>
+
+@code {
+    List<Student> students = new List<Student>();
+
+    protected override void OnInitialized()
+    {
+        LoadQuery();
+    }
+
+    void LoadQuery()
+    {
+        var studentsEnrolledInMoreThanTwoClasses = _db.std
+     .Where(s => s.enrolls.Count() > 2)
+     .Select(s => new { StudentName = s.sname, EnrolledClassesCount = s.enrolls.Count() });
+
+        // Result
+        foreach (var studentInfo in studentsEnrolledInMoreThanTwoClasses)
+        {
+            Console.WriteLine($"Student Name: {studentInfo.StudentName}, Enrolled Classes: {studentInfo.EnrolledClassesCount}");
+        }
+
+        }
+    }
+}

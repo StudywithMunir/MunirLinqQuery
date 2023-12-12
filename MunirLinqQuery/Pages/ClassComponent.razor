@@ -1,0 +1,161 @@
+﻿@page "/addclass"
+@using MunirLinqQuery.Data
+@inject StudentDbContext _db
+
+<style>
+
+    h3 {
+        color: #333;
+        font-family: 'Arial', sans-serif;
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        color: #555;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 16px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    button {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    tr:hover {
+        background-color: #f5f5f5;
+    }
+</style>
+
+<h3>Class Form</h3>
+
+<EditForm Model="@clas" OnValidSubmit="@HandleSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <label for="name">Name:</label>
+    <InputText id="name" @bind-Value="clas.name" class="form-control" />
+    <br />
+    <label for="roomNo">Room No:</label>
+    <InputNumber id="roomNo" @bind-Value="clas.roomNo" class="form-control" />
+    <br />
+    <label for="fid">Teacher:</label>
+    <InputSelect @bind-Value="clas.faculty" class="form-control">
+        <option value="">Choose an option</option>
+        @foreach (var item in _db.Faculties.ToList())
+        {
+            <option value="@item.fid">@item.fname</option>
+        }
+    </InputSelect>
+    <br />
+    <label for="student">Student:</label>
+    <InputSelect @bind-Value="clas.students" class="form-control">
+        <option value="">Choose an option</option>
+        @foreach (var item in _db.std.ToList())
+        {
+            <option value="@item.sid">@item.sname</option>
+        }
+    </InputSelect>
+    <br />
+    <button type="submit">Save</button>
+</EditForm>
+
+<table>
+    <thead>
+        <tr>
+            <th>Class Name</th>
+            <th>Room Number</th>
+            <th>Faculty</th>
+            <th>Students</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var currentStudent in classs)
+        {
+            <tr>
+                <td>@currentStudent.name</td>
+                <td>@currentStudent.roomNo</td>
+                <td>@currentStudent.faculty</td>
+                <td>@currentStudent.students</td>
+                <td><button @onclick="() => EditClass(currentStudent)">Edit</button></td>
+                <td><button @onclick="() => DeleteClass(currentStudent)">Delete</button></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    Class clas = new Class();
+    //class is reserved keyword thats why i use classs and clas
+    List<Class> classs = new List<Class>();
+
+    protected override void OnInitialized()
+    {
+        LoadClasses();
+    }
+
+    void LoadClasses()
+    {
+        classs = _db.Classes.ToList();
+    }
+
+    void HandleSubmit()
+    {
+        if (clas.cid == 0)
+        {
+            _db.Add(clas);
+        }
+        else
+        {
+            _db.Update(clas);
+        }
+
+        _db.SaveChanges();
+        clas = new Class(); 
+        LoadClasses(); 
+    }
+
+    void EditClass(Class currentClass)
+    {
+        clas = currentClass;
+    }
+
+    void DeleteClass(Class currentClass)
+    {
+        _db.Remove(currentClass);
+        _db.SaveChanges();
+        LoadClasses(); 
+    }
+}

@@ -1,0 +1,44 @@
+﻿@page "/Q1"
+@using MunirLinqQuery.Data
+@inject StudentDbContext _db
+
+
+<h3>Second Additional Query Solution</h3>
+
+<table>
+    <tbody>
+        @foreach (var item in students)
+        {
+        <td>@item.sname</td>
+        <td>@item.major</td>
+        <td>@item.age</td>
+
+        }
+    </tbody>
+</table>
+
+@code {
+    List<Student> students = new List<Student>();
+
+    protected override void OnInitialized()
+    {
+        LoadQuery();
+    }
+
+    void LoadQuery()
+    {
+        var averageAgeByMajor = _db.std
+     .GroupBy(s => s.major)
+     .Select(group => new
+     {
+         Major = group.Key,
+         AverageAge = group.Average(s => s.age)
+     });
+
+        // Result
+        foreach (var majorInfo in averageAgeByMajor)
+        {
+            Console.WriteLine($"Major: {majorInfo.Major}, Average Age: {majorInfo.AverageAge}");
+        }
+    }
+}
