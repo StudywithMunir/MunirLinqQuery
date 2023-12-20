@@ -3,7 +3,7 @@
 @inject StudentDbContext _db
 
 <style>
-   
+
     h3 {
         color: #333;
         font-family: 'Arial', sans-serif;
@@ -33,9 +33,9 @@
         cursor: pointer;
     }
 
-    button:hover {
-        background-color: #0056b3;
-    }
+        button:hover {
+            background-color: #0056b3;
+        }
 
     table {
         width: 100%;
@@ -124,7 +124,7 @@
         }
 
         _db.SaveChanges();
-        student = new Student(); 
+        student = new Student();
         DisplayStudent();
     }
 

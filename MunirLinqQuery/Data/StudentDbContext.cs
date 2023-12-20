@@ -14,6 +14,6 @@ namespace MunirLinqQuery.Data
         public DbSet<Class> Classes { get; set; }
         public DbSet<Faculty> Faculties { get; set; }
         public DbSet<Enrolled> Enrolled { get; set; }
-        public DbSet<Department> departments { get; set; }
+        public DbSet<Department> depts { get; set; }
     }
 }

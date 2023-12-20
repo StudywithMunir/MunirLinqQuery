@@ -38,7 +38,7 @@
 
     void LoadDeparts()
     {
-        departs = _db.departments.ToList();
+        departs = _db.depts.ToList();
     }
 
     void HandleSubmit()
@@ -53,8 +53,8 @@
         }
 
         _db.SaveChanges();
-        depart = new Department(); 
-        LoadDeparts(); 
+        depart = new Department();
+        LoadDeparts();
     }
 
     void EditDepart(Department currentClass)

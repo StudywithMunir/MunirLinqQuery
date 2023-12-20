@@ -71,7 +71,7 @@
     <br />
     <label for="fid">Select Teacher:</label>
     <InputSelect @bind-Value="clas.fid" class="form-control">
-        <option value="">Select...</option>
+        <option value="">Choose the Teacher</option>
         @foreach (var item in _db.Faculties.ToList())
         {
             <option value="@item.fid">@item.fname</option>
@@ -82,7 +82,7 @@
 </EditForm>
 
 <table>
-   
+
     <tbody>
         @foreach (var currentClass in classs)
         {
@@ -125,8 +125,8 @@
         }
 
         _db.SaveChanges();
-        clas = new Class(); 
-        LoadClasses(); 
+        clas = new Class();
+        LoadClasses();
     }
 
     void EditClass(Class currentClass)
@@ -138,6 +138,6 @@
     {
         _db.Remove(currentClass);
         _db.SaveChanges();
-        LoadClasses(); 
+        LoadClasses();
     }
 }

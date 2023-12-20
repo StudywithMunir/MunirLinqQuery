@@ -65,7 +65,7 @@
     <ValidationSummary />
     <label for="student">Select Student:</label>
     <InputSelect @bind-Value="enroll.sid" class="form-control">
-        <option value="">Select...</option>
+        <option value="">Choose the Student</option>
         @foreach (var item in _db.std.ToList())
         {
             <option value="@item.sid">@item.sname</option>
@@ -74,7 +74,7 @@
     <br />
     <label for="class">Select Class:</label>
     <InputSelect @bind-Value="enroll.cid" class="form-control">
-        <option value="">Select...</option>
+        <option value="">Choose the Class</option>
         @foreach (var item in _db.Classes.ToList())
         {
             <option value="@item.cid">@item.name</option>
@@ -83,7 +83,7 @@
     <br />
     <label for="teacher">Select Teacher:</label>
     <InputSelect @bind-Value="enroll.fid" class="form-control">
-        <option value="">Select...</option>
+        <option value="">Choose the Teacher</option>
         @foreach (var item in _db.Faculties.ToList())
         {
             <option value="@item.fid">@item.fname</option>
@@ -93,7 +93,7 @@
     <button type="submit">Save</button>
 </EditForm>
 <table>
-    
+
     <tbody>
         @foreach (var currentEnroll in enrolls)
         {
@@ -135,8 +135,8 @@
         }
 
         _db.SaveChanges();
-        enroll = new Enrolled(); 
-        LoadEnroll(); 
+        enroll = new Enrolled();
+        LoadEnroll();
     }
 
     void EditEnroll(Enrolled currentEnroll)
@@ -148,6 +148,6 @@
     {
         _db.Remove(currentEnroll);
         _db.SaveChanges();
-        LoadEnroll(); 
+        LoadEnroll();
     }
 }

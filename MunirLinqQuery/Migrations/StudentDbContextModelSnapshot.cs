@@ -67,7 +67,6 @@ namespace MunirLinqQuery.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("roomNo")
@@ -94,7 +93,7 @@ namespace MunirLinqQuery.Migrations
 
                     b.HasKey("deptid");
 
-                    b.ToTable("departments");
+                    b.ToTable("depts");
                 });
 
             modelBuilder.Entity("MunirLinqQuery.Data.Enrolled", b =>
@@ -108,10 +107,10 @@ namespace MunirLinqQuery.Migrations
                     b.Property<int>("cid")
                         .HasColumnType("int");
 
-                    b.Property<int>("clascid")
+                    b.Property<int?>("clscid")
                         .HasColumnType("int");
 
-                    b.Property<int>("facultyfid")
+                    b.Property<int?>("facultyfid")
                         .HasColumnType("int");
 
                     b.Property<int>("fid")
@@ -122,7 +121,7 @@ namespace MunirLinqQuery.Migrations
 
                     b.HasKey("eid");
 
-                    b.HasIndex("clascid");
+                    b.HasIndex("clscid");
 
                     b.HasIndex("facultyfid");
 
@@ -161,22 +160,22 @@ namespace MunirLinqQuery.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("sid"));
 
+                    b.Property<int>("EnrolledClassesCount")
+                        .HasColumnType("int");
+
                     b.Property<int>("age")
                         .HasColumnType("int");
 
                     b.Property<string>("major")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("marks")
                         .HasColumnType("int");
 
                     b.Property<string>("sname")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("standing")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("sid");
@@ -225,19 +224,15 @@ namespace MunirLinqQuery.Migrations
 
             modelBuilder.Entity("MunirLinqQuery.Data.Enrolled", b =>
                 {
-                    b.HasOne("MunirLinqQuery.Data.Class", "clas")
+                    b.HasOne("MunirLinqQuery.Data.Class", "cls")
                         .WithMany()
-                        .HasForeignKey("clascid")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("clscid");
 
                     b.HasOne("MunirLinqQuery.Data.Faculty", "faculty")
                         .WithMany()
-                        .HasForeignKey("facultyfid")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("facultyfid");
 
-                    b.Navigation("clas");
+                    b.Navigation("cls");
 
                     b.Navigation("faculty");
                 });

@@ -1,4 +1,5 @@
-﻿@page "/query"
+﻿
+@page "/query"
 @using MunirLinqQuery.Data
 @inject StudentDbContext _db
 
@@ -58,7 +59,7 @@
         @foreach (var item in adtquery1)
         {
             <li class="result-item">
-                @item.sname
+                @item.sname - Enrolled Classes: @item.EnrolledClassesCount
             </li>
         }
     </ul>
@@ -113,32 +114,33 @@
         query2 = (from s in _db.std
                   where s.classes.All(c => c.Faculty.deptid != 22)
                   select new Student
-                        {
-                            sid = s.sid,
-                            major = s.major
-                        }).ToList();
+                      {
+                          sid = s.sid,
+                          major = s.major
+                      }).ToList();
 
         adtquery1 = (from s in _db.std
-                  where s.classes.Count > 2
-                  select new Student
-                 {
-                     sname = s.sname
-                 }).ToList();
+                     where s.classes.Count > 2
+                     select new Student
+                         {
+                             sname = s.sname,
+                             EnrolledClassesCount = s.classes.Count
+                         }).ToList();
 
         adtquery2 = (from s in _db.std
-                  where s.marks == 0
-                  select new Student
-                  {
-                      sname = s.sname
-                  }).ToList();
+                     where s.marks == 0
+                     select new Student
+                         {
+                             sname = s.sname
+                         }).ToList();
 
         adtquery3 = (from s in _db.std
-                   group s by s.major into g
-                  select new TempStudentAtr
-                   {
-                       Major = g.Key,
-                       AverageAge = g.Average(s => s.age)
-                   }).ToList();
+                     group s by s.major into g
+                     select new TempStudentAtr
+                         {
+                             Major = g.Key,
+                             AverageAge = g.Average(s => s.age)
+                         }).ToList();
     }
 
     //creating a temperoray class and creating major and avgAge

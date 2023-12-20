@@ -71,8 +71,8 @@
     <br />
     <label for="depid">DepId:</label>
     <InputSelect @bind-Value="faculty.deptid" class="form-control">
-        <option value="">Select...</option>
-        @foreach (var item in _db.departments.ToList())
+        <option value="">Choose the Department</option>
+        @foreach (var item in _db.depts.ToList())
         {
             <option value="@item.deptid">@item.deptName</option>
         }
@@ -82,7 +82,7 @@
 </EditForm>
 
 <table>
- 
+
     <tbody>
         @foreach (var currentFaculty in Faculties)
         {
@@ -124,8 +124,8 @@
         }
 
         _db.SaveChanges();
-        faculty = new Faculty(); 
-        LoadFaculties(); 
+        faculty = new Faculty();
+        LoadFaculties();
     }
 
     void EditFaculty(Faculty currentFaculty)
@@ -137,6 +137,6 @@
     {
         _db.Remove(currentFaculty);
         _db.SaveChanges();
-        LoadFaculties(); 
+        LoadFaculties();
     }
 }

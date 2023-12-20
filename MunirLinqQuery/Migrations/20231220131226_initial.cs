@@ -11,7 +11,7 @@ namespace MunirLinqQuery.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "departments",
+                name: "depts",
                 columns: table => new
                 {
                     deptid = table.Column<int>(type: "int", nullable: false)
@@ -20,7 +20,7 @@ namespace MunirLinqQuery.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_departments", x => x.deptid);
+                    table.PrimaryKey("PK_depts", x => x.deptid);
                 });
 
             migrationBuilder.CreateTable(
@@ -44,11 +44,12 @@ namespace MunirLinqQuery.Migrations
                 {
                     sid = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    sname = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    major = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    standing = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    sname = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    major = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    standing = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    age = table.Column<int>(type: "int", nullable: false),
                     marks = table.Column<int>(type: "int", nullable: false),
-                    age = table.Column<int>(type: "int", nullable: false)
+                    EnrolledClassesCount = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -61,7 +62,7 @@ namespace MunirLinqQuery.Migrations
                 {
                     cid = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     roomNo = table.Column<int>(type: "int", nullable: false),
                     fid = table.Column<int>(type: "int", nullable: false),
                     Facultyfid = table.Column<int>(type: "int", nullable: true)
@@ -109,24 +110,22 @@ namespace MunirLinqQuery.Migrations
                     fid = table.Column<int>(type: "int", nullable: false),
                     sid = table.Column<int>(type: "int", nullable: false),
                     cid = table.Column<int>(type: "int", nullable: false),
-                    facultyfid = table.Column<int>(type: "int", nullable: false),
-                    clascid = table.Column<int>(type: "int", nullable: false)
+                    facultyfid = table.Column<int>(type: "int", nullable: true),
+                    clscid = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Enrolled", x => x.eid);
                     table.ForeignKey(
-                        name: "FK_Enrolled_Classes_clascid",
-                        column: x => x.clascid,
+                        name: "FK_Enrolled_Classes_clscid",
+                        column: x => x.clscid,
                         principalTable: "Classes",
-                        principalColumn: "cid",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "cid");
                     table.ForeignKey(
                         name: "FK_Enrolled_Faculties_facultyfid",
                         column: x => x.facultyfid,
                         principalTable: "Faculties",
-                        principalColumn: "fid",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "fid");
                 });
 
             migrationBuilder.CreateTable(
@@ -164,9 +163,9 @@ namespace MunirLinqQuery.Migrations
                 column: "studentssid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Enrolled_clascid",
+                name: "IX_Enrolled_clscid",
                 table: "Enrolled",
-                column: "clascid");
+                column: "clscid");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Enrolled_facultyfid",
@@ -186,7 +185,7 @@ namespace MunirLinqQuery.Migrations
                 name: "ClassStudent");
 
             migrationBuilder.DropTable(
-                name: "departments");
+                name: "depts");
 
             migrationBuilder.DropTable(
                 name: "EnrolledStudent");

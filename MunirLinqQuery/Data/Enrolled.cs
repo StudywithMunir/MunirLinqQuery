@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Security.Claims;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MunirLinqQuery.Data
 {
@@ -12,7 +12,7 @@ namespace MunirLinqQuery.Data
         public int cid { get; set; }
 
         public virtual IList<Student>? students { get; set; }
-        public virtual Faculty faculty { get; set; }
-        public virtual Class clas { get; set; }
+        public virtual Faculty? faculty { get; set; }
+        public virtual Class? cls { get; set; }
     }
 }
