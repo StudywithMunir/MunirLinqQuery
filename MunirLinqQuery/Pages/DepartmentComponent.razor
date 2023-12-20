@@ -1,0 +1,71 @@
+﻿@page "/department"
+@using MunirLinqQuery.Data
+@inject StudentDbContext _db
+
+<h3>Add Depart</h3>
+
+<EditForm Model="@depart" OnValidSubmit="@HandleSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <label for="name">Depart Name:</label>
+    <InputText id="name" @bind-Value="depart.deptName" class="form-control" />
+    <br />
+    <button type="submit">Save</button>
+</EditForm>
+
+<table>
+    <tbody>
+        @foreach (var currentClass in departs)
+        {
+            <tr>
+                <td>@currentClass.deptid</td>
+                <td>@currentClass.deptName</td>
+                <td><button @onclick="() => EditDepart(currentClass)">Edit</button></td>
+                <td><button @onclick="() => DeleteDepart(currentClass)">Delete</button></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    Department depart = new Department();
+    List<Department> departs = new List<Department>();
+
+    protected override void OnInitialized()
+    {
+        LoadDeparts();
+    }
+
+    void LoadDeparts()
+    {
+        departs = _db.departments.ToList();
+    }
+
+    void HandleSubmit()
+    {
+        if (depart.deptid == 0)
+        {
+            _db.Add(depart);
+        }
+        else
+        {
+            _db.Update(depart);
+        }
+
+        _db.SaveChanges();
+        depart = new Department(); 
+        LoadDeparts(); 
+    }
+
+    void EditDepart(Department currentClass)
+    {
+        depart = currentClass;
+    }
+
+    void DeleteDepart(Department currentClass)
+    {
+        _db.Remove(currentClass);
+        _db.SaveChanges();
+        LoadDeparts(); // Reload users after deletion
+    }
+}

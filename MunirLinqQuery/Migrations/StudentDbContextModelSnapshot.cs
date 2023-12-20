@@ -22,6 +22,21 @@ namespace MunirLinqQuery.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("ClassStudent", b =>
+                {
+                    b.Property<int>("classescid")
+                        .HasColumnType("int");
+
+                    b.Property<int>("studentssid")
+                        .HasColumnType("int");
+
+                    b.HasKey("classescid", "studentssid");
+
+                    b.HasIndex("studentssid");
+
+                    b.ToTable("ClassStudent");
+                });
+
             modelBuilder.Entity("EnrolledStudent", b =>
                 {
                     b.Property<int>("enrollseid")
@@ -45,10 +60,10 @@ namespace MunirLinqQuery.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("cid"));
 
-                    b.Property<int?>("Enrolledeid")
+                    b.Property<int?>("Facultyfid")
                         .HasColumnType("int");
 
-                    b.Property<int>("facultyfid")
+                    b.Property<int>("fid")
                         .HasColumnType("int");
 
                     b.Property<string>("name")
@@ -60,11 +75,26 @@ namespace MunirLinqQuery.Migrations
 
                     b.HasKey("cid");
 
-                    b.HasIndex("Enrolledeid");
-
-                    b.HasIndex("facultyfid");
+                    b.HasIndex("Facultyfid");
 
                     b.ToTable("Classes");
+                });
+
+            modelBuilder.Entity("MunirLinqQuery.Data.Department", b =>
+                {
+                    b.Property<int>("deptid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("deptid"));
+
+                    b.Property<string>("deptName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("deptid");
+
+                    b.ToTable("departments");
                 });
 
             modelBuilder.Entity("MunirLinqQuery.Data.Enrolled", b =>
@@ -78,10 +108,23 @@ namespace MunirLinqQuery.Migrations
                     b.Property<int>("cid")
                         .HasColumnType("int");
 
+                    b.Property<int>("clascid")
+                        .HasColumnType("int");
+
+                    b.Property<int>("facultyfid")
+                        .HasColumnType("int");
+
+                    b.Property<int>("fid")
+                        .HasColumnType("int");
+
                     b.Property<int>("sid")
                         .HasColumnType("int");
 
                     b.HasKey("eid");
+
+                    b.HasIndex("clascid");
+
+                    b.HasIndex("facultyfid");
 
                     b.ToTable("Enrolled");
                 });
@@ -94,13 +137,7 @@ namespace MunirLinqQuery.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("fid"));
 
-                    b.Property<int?>("Studentsid")
-                        .HasColumnType("int");
-
-                    b.Property<int>("depid")
-                        .HasColumnType("int");
-
-                    b.Property<int>("enrolleid")
+                    b.Property<int>("deptid")
                         .HasColumnType("int");
 
                     b.Property<string>("fname")
@@ -113,10 +150,6 @@ namespace MunirLinqQuery.Migrations
 
                     b.HasKey("fid");
 
-                    b.HasIndex("Studentsid");
-
-                    b.HasIndex("enrolleid");
-
                     b.ToTable("Faculties");
                 });
 
@@ -127,9 +160,6 @@ namespace MunirLinqQuery.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("sid"));
-
-                    b.Property<int?>("Classcid")
-                        .HasColumnType("int");
 
                     b.Property<int>("age")
                         .HasColumnType("int");
@@ -151,9 +181,22 @@ namespace MunirLinqQuery.Migrations
 
                     b.HasKey("sid");
 
-                    b.HasIndex("Classcid");
-
                     b.ToTable("std");
+                });
+
+            modelBuilder.Entity("ClassStudent", b =>
+                {
+                    b.HasOne("MunirLinqQuery.Data.Class", null)
+                        .WithMany()
+                        .HasForeignKey("classescid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MunirLinqQuery.Data.Student", null)
+                        .WithMany()
+                        .HasForeignKey("studentssid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("EnrolledStudent", b =>
@@ -173,58 +216,29 @@ namespace MunirLinqQuery.Migrations
 
             modelBuilder.Entity("MunirLinqQuery.Data.Class", b =>
                 {
-                    b.HasOne("MunirLinqQuery.Data.Enrolled", null)
-                        .WithMany("classes")
-                        .HasForeignKey("Enrolledeid");
-
-                    b.HasOne("MunirLinqQuery.Data.Faculty", "faculty")
-                        .WithMany("classes")
-                        .HasForeignKey("facultyfid")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("faculty");
-                });
-
-            modelBuilder.Entity("MunirLinqQuery.Data.Faculty", b =>
-                {
-                    b.HasOne("MunirLinqQuery.Data.Student", null)
-                        .WithMany("faculty")
-                        .HasForeignKey("Studentsid");
-
-                    b.HasOne("MunirLinqQuery.Data.Enrolled", "enroll")
+                    b.HasOne("MunirLinqQuery.Data.Faculty", "Faculty")
                         .WithMany()
-                        .HasForeignKey("enrolleid")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("Facultyfid");
 
-                    b.Navigation("enroll");
-                });
-
-            modelBuilder.Entity("MunirLinqQuery.Data.Student", b =>
-                {
-                    b.HasOne("MunirLinqQuery.Data.Class", null)
-                        .WithMany("students")
-                        .HasForeignKey("Classcid");
-                });
-
-            modelBuilder.Entity("MunirLinqQuery.Data.Class", b =>
-                {
-                    b.Navigation("students");
+                    b.Navigation("Faculty");
                 });
 
             modelBuilder.Entity("MunirLinqQuery.Data.Enrolled", b =>
                 {
-                    b.Navigation("classes");
-                });
+                    b.HasOne("MunirLinqQuery.Data.Class", "clas")
+                        .WithMany()
+                        .HasForeignKey("clascid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-            modelBuilder.Entity("MunirLinqQuery.Data.Faculty", b =>
-                {
-                    b.Navigation("classes");
-                });
+                    b.HasOne("MunirLinqQuery.Data.Faculty", "faculty")
+                        .WithMany()
+                        .HasForeignKey("facultyfid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-            modelBuilder.Entity("MunirLinqQuery.Data.Student", b =>
-                {
+                    b.Navigation("clas");
+
                     b.Navigation("faculty");
                 });
 #pragma warning restore 612, 618

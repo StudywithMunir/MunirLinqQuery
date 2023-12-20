@@ -69,21 +69,12 @@
     <label for="roomNo">Room No:</label>
     <InputNumber id="roomNo" @bind-Value="clas.roomNo" class="form-control" />
     <br />
-    <label for="fid">Teacher:</label>
-    <InputSelect @bind-Value="clas.faculty" class="form-control">
-        <option value="">Choose an option</option>
+    <label for="fid">Select Teacher:</label>
+    <InputSelect @bind-Value="clas.fid" class="form-control">
+        <option value="">Select...</option>
         @foreach (var item in _db.Faculties.ToList())
         {
             <option value="@item.fid">@item.fname</option>
-        }
-    </InputSelect>
-    <br />
-    <label for="student">Student:</label>
-    <InputSelect @bind-Value="clas.students" class="form-control">
-        <option value="">Choose an option</option>
-        @foreach (var item in _db.std.ToList())
-        {
-            <option value="@item.sid">@item.sname</option>
         }
     </InputSelect>
     <br />
@@ -91,26 +82,17 @@
 </EditForm>
 
 <table>
-    <thead>
-        <tr>
-            <th>Class Name</th>
-            <th>Room Number</th>
-            <th>Faculty</th>
-            <th>Students</th>
-            <th>Edit</th>
-            <th>Delete</th>
-        </tr>
-    </thead>
+   
     <tbody>
-        @foreach (var currentStudent in classs)
+        @foreach (var currentClass in classs)
         {
             <tr>
-                <td>@currentStudent.name</td>
-                <td>@currentStudent.roomNo</td>
-                <td>@currentStudent.faculty</td>
-                <td>@currentStudent.students</td>
-                <td><button @onclick="() => EditClass(currentStudent)">Edit</button></td>
-                <td><button @onclick="() => DeleteClass(currentStudent)">Delete</button></td>
+                <td>@currentClass.cid</td>
+                <td>@currentClass.name</td>
+                <td>@currentClass.roomNo</td>
+                <td>@currentClass.fid</td>
+                <td><button @onclick="() => EditClass(currentClass)">Edit</button></td>
+                <td><button @onclick="() => DeleteClass(currentClass)">Delete</button></td>
             </tr>
         }
     </tbody>

@@ -9,7 +9,9 @@ namespace MunirLinqQuery.Data
         public string name { get; set; }
         public int roomNo { get; set; }
 
-        public virtual Faculty faculty { get; set; }
+        public int fid { get; set; }
+
+        public virtual Faculty Faculty { get; set; }
         public virtual IList<Student> students { get; set; }
     }
 }

@@ -65,58 +65,32 @@
     <ValidationSummary />
     <label for="name">Name:</label>
     <InputText id="name" @bind-Value="student.sname" class="form-control" />
-    <label for="age">Age:</label>
-    <InputNumber id="age" @bind-Value="student.age" class="form-control" />
+    <br />
     <label for="major">Major:</label>
     <InputText id="major" @bind-Value="student.major" class="form-control" />
-    <label for="age">Marks:</label>
-    <InputNumber id="age" @bind-Value="student.marks" class="form-control" />
+    <br />
     <label for="standing">Standing:</label>
     <InputText id="standing" @bind-Value="student.standing" class="form-control" />
-    <label for="fid">Select Teacher:</label>
-    <InputSelect @bind-Value="student.faculty" class="form-control">
-        <option value="">Choose an option</option>
-        @foreach (var item in _db.Faculties.ToList())
-        {
-            <option value="@item.fid">@item.fname</option>
-        }
-    </InputSelect>
-    <label for="course">Course:</label>
-    <InputSelect @bind-Value="student.enrolls" class="form-control">
-        <option value="">Choose an option</option>
-        @foreach (var item in _db.Enrolled.ToList())
-        {
-            <option value="@item.eid">@item.eid</option>
-        }
-    </InputSelect>
+    <br />
+    <label for="age">Age:</label>
+    <InputNumber id="age" @bind-Value="student.age" class="form-control" />
+    <br />
+    <label for="marks">Marks:</label>
+    <InputNumber id="marks" @bind-Value="student.marks" class="form-control" />
+    <br />
     <button type="submit">Save</button>
 </EditForm>
 
 <table>
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Age</th>
-            <th>Major</th>
-            <th>Marks</th>
-            <th>Standing</th>
-            <th>Faculty</th>
-            <th>Enrolls</th>
-            <th>Edit</th>
-            <th>Delete</th>
-        </tr>
-    </thead>
     <tbody>
         @foreach (var currentStudent in students)
         {
             <tr>
                 <td>@currentStudent.sname</td>
-                <td>@currentStudent.age</td>
                 <td>@currentStudent.major</td>
-                <td>@currentStudent.marks</td>
                 <td>@currentStudent.standing</td>
-                <td>@currentStudent.faculty</td>
-                <td>@currentStudent.enrolls</td>
+                <td>@currentStudent.age</td>
+                <td>@currentStudent.marks</td>
                 <td><button @onclick="() => EditStudent(currentStudent)">Edit</button></td>
                 <td><button @onclick="() => DeleteStudent(currentStudent)">Delete</button></td>
             </tr>

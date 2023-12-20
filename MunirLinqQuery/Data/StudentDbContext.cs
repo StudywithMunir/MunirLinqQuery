@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using static MunirLinqQuery.Data.Department;
 
 namespace MunirLinqQuery.Data
 {
@@ -13,5 +14,6 @@ namespace MunirLinqQuery.Data
         public DbSet<Class> Classes { get; set; }
         public DbSet<Faculty> Faculties { get; set; }
         public DbSet<Enrolled> Enrolled { get; set; }
+        public DbSet<Department> departments { get; set; }
     }
 }

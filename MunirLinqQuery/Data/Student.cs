@@ -14,7 +14,7 @@ namespace MunirLinqQuery.Data
 
         public int age { get; set; }
 
-        public virtual IList<Faculty> faculty { get; set; }
         public virtual IList<Enrolled> enrolls { get; set; }
+        public virtual IList<Class> classes { get; set; }
     }
 }
