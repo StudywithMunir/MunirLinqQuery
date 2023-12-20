@@ -1,5 +1,6 @@
 ﻿
 @page "/query"
+@using Microsoft.EntityFrameworkCore;
 @using MunirLinqQuery.Data
 @inject StudentDbContext _db
 
@@ -119,13 +120,18 @@
                           major = s.major
                       }).ToList();
 
-        adtquery1 = (from s in _db.std
-                     where s.classes.Count > 2
-                     select new Student
-                         {
-                             sname = s.sname,
-                             EnrolledClassesCount = s.classes.Count
-                         }).ToList();
+     
+        adtquery1 = _db.std
+    .Where(s => _db.Enrolled.Count(e => e.sid == s.sid) > 2)
+    .Select(s => new Student
+        {
+            sname = s.sname,
+            EnrolledClassesCount = _db.Enrolled.Count(e => e.sid == s.sid)
+        })
+    .ToList();
+
+
+
 
         adtquery2 = (from s in _db.std
                      where s.marks == 0
@@ -133,6 +139,7 @@
                          {
                              sname = s.sname
                          }).ToList();
+
 
         adtquery3 = (from s in _db.std
                      group s by s.major into g
